@@ -24,7 +24,13 @@ public class BaseModel {
     private Date lastModifiedAt;
     private boolean isDeleted;
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
 
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 }
 /*
   to record who has made the changes and when the changes are been made we use

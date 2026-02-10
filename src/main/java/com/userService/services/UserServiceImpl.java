@@ -1,5 +1,6 @@
 package com.userService.services;
 
+import com.userService.exceptions.TokenInvalidException;
 import com.userService.models.Token;
 import com.userService.models.User;
 import com.userService.repositories.TokenRepository;
@@ -27,13 +28,12 @@ public class UserServiceImpl implements UserService{
     }
     @Override
     public Token login(String email, String password) {
-        Optional<User> optionalUser=userRepository.findByEmail(email);
-        if (optionalUser.isEmpty()){
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null){
 //            throw or redirect to signup page
             return null;
         }
 //        match the password
-        User user=optionalUser.get();
         if (!bCryptPasswordEncoder.matches(password,user.getPassword())){
 //            throw mismatch exception
             return null;
@@ -68,14 +68,15 @@ public class UserServiceImpl implements UserService{
 //        deleted should be false
 //        expiry time > current time
         Optional<Token> optionalToken=tokenRepository.findByValueAndIsDeletedAndExpiryAtGreaterThan(tokenValue,false,new Date());
-        if (optionalToken.isEmpty())
-            return null;
-
-        return optionalToken.get().getUser();
+        return optionalToken.map(Token::getUser).orElse(null);
     }
 
     @Override
     public void logout(String tokenValue) {
-
+        Token token = tokenRepository.findByValueAndIsDeletedAndExpiryAtGreaterThan(tokenValue, false, new Date())
+                .orElseThrow(() -> new TokenInvalidException("Token is invalid or already logged out"));
+        
+        token.setDeleted(true);
+        tokenRepository.save(token);
     }
 }

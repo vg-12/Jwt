@@ -31,6 +31,7 @@ public class UserController {
     }
     @PutMapping("/logout")
     public ResponseEntity<Void> logout(@RequestBody LogoutRequestDto logoutRequestDto){
+        userService.logout(logoutRequestDto.getTokenValue());
       return null;
     }
 //    localhoast:8080/users/validate/token
