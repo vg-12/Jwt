@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService{
 //        token value should be present in the db
 //        deleted should be false
 //        expiry time > current time
-        Optional<Token> optionalToken=tokenRepository.findByValueAndDeletedAndExpiryAtGreaterThan(tokenValue,false,new Date());
+        Optional<Token> optionalToken=tokenRepository.findByValueAndIsDeletedAndExpiryAtGreaterThan(tokenValue,false,new Date());
         if (optionalToken.isEmpty())
             return null;
 

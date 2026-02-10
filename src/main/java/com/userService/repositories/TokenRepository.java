@@ -10,5 +10,5 @@ public interface TokenRepository extends JpaRepository<Token,Long> {
     @Override
      Token save(Token token);
 
-    Optional<Token> findByValueAndDeletedAndExpiryAtGreaterThan(String value, Boolean deleted, Date currentTime);
+    Optional<Token> findByValueAndIsDeletedAndExpiryAtGreaterThan(String value, Boolean deleted, Date currentTime);
 }
